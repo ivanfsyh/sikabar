@@ -197,7 +197,8 @@
         <div x-show="modal" x-cloak class="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-slate-900/40" @click="modal = false"></div>
 
-            <form method="POST" :action="action" enctype="multipart/form-data"
+            <form method="POST" action="{{ route('kgb.store', $pegawai) }}" :action="action"
+                enctype="multipart/form-data"
                 class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
                 @csrf
                 <template x-if="isEdit"><input type="hidden" name="_method" value="PUT"></template>

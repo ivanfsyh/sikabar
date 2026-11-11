@@ -26,6 +26,7 @@ class RiwayatKgbController extends Controller
 
     public function store(RiwayatKgbRequest $request, Pegawai $pegawai)
     {
+        //     dd('masuk controller', $request->all(), $pegawai->id);
         $data = $request->validated();
         $this->assertTmtBaru($pegawai, $data['tmt_kgb']);
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('tanggal_sk');
             $table->string('pejabat_penandatangan')->nullable();
             $table->date('tmt_kgb');
-            $table->string('golongan_ruang', 20)->nullable();
+            $table->string('golongan_ruang', 100)->nullable();
             $table->unsignedTinyInteger('masa_kerja_tahun')->default(0);
             $table->unsignedTinyInteger('masa_kerja_bulan')->default(0);
             $table->unsignedBigInteger('gaji_pokok_lama')->default(0);

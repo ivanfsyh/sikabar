@@ -80,10 +80,8 @@
                 <div
                     class="mb-7 flex h-20 w-20 items-center justify-center
                             rounded-3xl bg-white/15 backdrop-blur">
-                    <svg class="h-11 w-11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 7h8m-8 4h8m-8 4h4m-7 6h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
+                    <img src="{{ asset('img/sikabar-logo-white.png') }}" alt="Logo SIKABAR"
+                        class="h-20 w-20 object-contain">
                 </div>
 
                 <h2 class="text-4xl font-semibold leading-tight">

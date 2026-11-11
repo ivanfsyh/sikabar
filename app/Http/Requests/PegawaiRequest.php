@@ -28,7 +28,7 @@ class PegawaiRequest extends FormRequest
             'tempat_lahir' => ['nullable', 'string', 'max:100'],
             'tanggal_lahir' => ['required', 'date', 'before:today'],
             'jenis_kelamin' => ['required', Rule::in(['L', 'P'])],
-            'pangkat_golongan' => ['nullable', 'string', 'max:50'],
+            'pangkat_golongan' => ['nullable', 'string', 'max:100'],
             'jabatan' => ['nullable', 'string', 'max:255'],
             'unit_kerja' => ['nullable', 'string', 'max:255'],
             'tmt_cpns' => ['nullable', 'date'],

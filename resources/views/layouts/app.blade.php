@@ -45,6 +45,7 @@
 
     <title>@yield('title', 'Dashboard') - SIKABAR</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,14 +75,8 @@
                duration-300 lg:translate-x-0">
 
             <div class="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
-                <div
-                    class="flex h-11 w-11 items-center justify-center
-                        rounded-xl bg-blue-600 text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 7h8m-8 4h8m-8 4h4m-7 6h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center">
+                    <img src="{{ asset('img/favicon.png') }}" alt="Logo SIKABAR" class="h-11 w-11 object-contain">
                 </div>
 
                 <div>

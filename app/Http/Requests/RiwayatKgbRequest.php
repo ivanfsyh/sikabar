@@ -18,7 +18,7 @@ class RiwayatKgbRequest extends FormRequest
             'tanggal_sk' => ['required', 'date'],
             'pejabat_penandatangan' => ['nullable', 'string', 'max:255'],
             'tmt_kgb' => ['required', 'date'],
-            'golongan_ruang' => ['nullable', 'string', 'max:20'],
+            'golongan_ruang' => ['nullable', 'string', 'max:100'],
             'masa_kerja_tahun' => ['required', 'integer', 'min:0', 'max:50'],
             'masa_kerja_bulan' => ['required', 'integer', 'min:0', 'max:11'],
             'gaji_pokok_lama' => ['required', 'integer', 'min:0'],

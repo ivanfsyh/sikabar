@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['L', 'P']);
-            $table->string('pangkat_golongan', 50)->nullable();
+            $table->string('pangkat_golongan', 100)->nullable();
             $table->string('jabatan')->nullable();
             $table->string('unit_kerja')->nullable();
             $table->date('tmt_cpns')->nullable();
