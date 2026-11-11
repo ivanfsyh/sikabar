@@ -103,9 +103,8 @@
                 </p>
 
                 <a href="{{ route('dashboard') }}"
-                    class="flex items-center gap-3 rounded-xl
-                      bg-blue-50 px-4 py-3 text-sm font-semibold
-                      text-blue-700">
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm
+      {{ request()->routeIs('dashboard', 'admin.dashboard', 'pimpinan.dashboard') ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                             d="M3 10.5L12 3l9 7.5M5 9v11h14V9" />
@@ -120,9 +119,9 @@
                         Administrasi
                     </p>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3
-                          text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700">
+                    <a href="{{ route('pegawai.index') }}"
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm
+      {{ request()->routeIs('pegawai.*') ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                 d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2m15-13a4 4 0 11-8 0 4 4 0 018 0zm3 13v-2a4 4 0 00-3-3.87" />
@@ -130,24 +129,14 @@
                         Data Pegawai
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3
-                          text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700">
+                    <a href="{{ route('kgb.index') }}"
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm
+      {{ request()->routeIs('kgb.*') ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                 d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Jadwal KGB
-                    </a>
-
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3
-                          text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                d="M8 7h8m-8 4h8m-8 4h5m-9 5h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v13a2 2 0 002 2z" />
-                        </svg>
-                        Riwayat KGB
                     </a>
                 @endrole
 
@@ -172,14 +161,6 @@
             </div>
 
             <div class="border-t border-slate-100 p-4">
-                <div class="rounded-xl bg-slate-50 p-3">
-                    <p class="text-sm font-semibold text-slate-700">
-                        {{ auth()->user()->name }}
-                    </p>
-                    <p class="mt-1 text-xs capitalize text-blue-600">
-                        {{ auth()->user()->getRoleNames()->implode(', ') }}
-                    </p>
-                </div>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-3">
                     @csrf
@@ -250,6 +231,29 @@
     </div>
 
     <!-- SweetAlert Flash Message -->
+    <!-- Konfirmasi hapus (dipakai form dengan atribut data-confirm) -->
+    <script>
+        document.addEventListener('submit', (e) => {
+            const form = e.target;
+            if (!form.dataset.confirm || form.dataset.confirmed) return;
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Yakin?',
+                text: form.dataset.confirm,
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonText: 'Batal',
+                confirmButtonText: 'Ya, hapus'
+            }).then((r) => {
+                if (r.isConfirmed) {
+                    form.dataset.confirmed = '1';
+                    form.submit();
+                }
+            });
+        });
+    </script>
+
     @if (session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', () => {

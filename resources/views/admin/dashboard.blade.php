@@ -17,51 +17,32 @@
 
     <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
-        @foreach ([['Total Pegawai', '0', 'users'], ['KGB Bulan Ini', '0', 'calendar'], ['KGB Mendatang', '0', 'clock'], ['Notifikasi Terkirim', '0', 'send']] as $item)
-            <div class="rounded-2xl border border-slate-100
-                    bg-white p-6 shadow-sm">
+        @foreach ([['Total Pegawai', $totalPegawai, '♙', 'bg-blue-50 text-blue-600', $pegawaiAktif . ' pegawai aktif'], ['KGB Bulan Ini', $kgbBulanIni, '▦', 'bg-emerald-50 text-emerald-600', $awalBulan->translatedFormat('F Y')], ['KGB Mendatang', $kgbMendatang, '◷', 'bg-amber-50 text-amber-600', '3 bulan ke depan'], ['KGB Terlewat', $kgbTerlewat, '!', 'bg-red-50 text-red-600', 'perlu ditindaklanjuti']] as [$title, $value, $icon, $color, $note])
+            <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
 
-                <div
-                    class="mb-5 flex h-11 w-11 items-center
-                        justify-center rounded-xl bg-blue-50
-                        text-blue-600">
-
-                    @if ($item[2] === 'users')
-                        <span class="text-xl">♙</span>
-                    @elseif($item[2] === 'calendar')
-                        <span class="text-xl">▦</span>
-                    @elseif($item[2] === 'clock')
-                        <span class="text-xl">◷</span>
-                    @else
-                        <span class="text-xl">➤</span>
-                    @endif
-
+                <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl {{ $color }}">
+                    <span class="text-xl font-semibold">{{ $icon }}</span>
                 </div>
 
-                <p class="text-sm text-slate-400">{{ $item[0] }}</p>
+                <p class="text-sm text-slate-400">{{ $title }}</p>
 
-                <h3 class="mt-2 text-3xl font-bold text-slate-800">
-                    {{ $item[1] }}
-                </h3>
+                <h3 class="mt-2 text-3xl font-bold text-slate-800">{{ $value }}</h3>
+
+                <p class="mt-1 text-xs text-slate-400">{{ $note }}</p>
 
             </div>
         @endforeach
 
     </div>
 
-    <div class="mt-8 rounded-2xl border border-slate-100
-            bg-white p-6 shadow-sm">
+    @if ($belumAdaKgb > 0)
+        <div class="mt-6 rounded-2xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-700">
+            Ada <b>{{ $belumAdaKgb }}</b> pegawai aktif yang belum memiliki riwayat KGB,
+            sehingga jadwal KGB-nya belum bisa dihitung.
+            <a href="{{ route('pegawai.index') }}" class="font-semibold underline">Lihat data pegawai</a>
+        </div>
+    @endif
 
-        <h3 class="font-semibold text-slate-800">
-            Informasi Sistem
-        </h3>
-
-        <p class="mt-2 text-sm leading-relaxed text-slate-500">
-            Selamat menggunakan SIKABAR. Sistem ini digunakan
-            untuk membantu pengelolaan data pegawai dan monitoring
-            jadwal kenaikan gaji berkala di Puskesmas Sunyaragi.
-        </p>
-
-    </div>
+    @include('partials.jadwal-kgb', ['detail' => true])
 
 @endsection
