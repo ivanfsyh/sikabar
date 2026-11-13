@@ -133,6 +133,17 @@
                         </svg>
                         Jadwal KGB
                     </a>
+
+                    <p class="mb-1 mt-5 px-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Pengingat</p>
+
+                    @foreach ([['pengingat.aturan.index', 'pengingat.aturan.*', 'Aturan Pengingat'], ['pengingat.template.index', 'pengingat.template.*', 'Template Pesan'], ['pengingat.riwayat.index', 'pengingat.riwayat.*', 'Riwayat Pengiriman'], ['pengaturan.integrasi', 'pengaturan.*', 'Integrasi & Jadwal']] as [$rute, $pola, $teks])
+                        <a href="{{ route($rute) }}"
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm
+                              {{ request()->routeIs($pola) ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}">
+                            <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+                            {{ $teks }}
+                        </a>
+                    @endforeach
                 @endrole
 
                 @role('pimpinan')
