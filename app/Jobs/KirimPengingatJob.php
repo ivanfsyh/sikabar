@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\RiwayatPengingat;
 use App\Models\Setting;
+use App\Services\FonnteService;
 use App\Services\KirimDevService;
 use App\Services\PengaturanMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,7 +25,7 @@ class KirimPengingatJob implements ShouldQueue
 
     public function __construct(public int $logId) {}
 
-    public function handle(KirimDevService $kirim): void
+    public function handle(KirimDevService $kirim, FonnteService $fonnte): void
     {
         PengaturanMail::terapkan();
 
@@ -63,12 +64,14 @@ class KirimPengingatJob implements ShouldQueue
 
         $galat = [];
 
-        // 1) WhatsApp via KirimDev (utama)
-        if ($kirim->aktif()) {
+        // 1) WhatsApp (utama): satu provider sesuai pilihan di Pengaturan Integrasi
+        $provider = Setting::waProvider();
+
+        if ($provider === 'kirimdev' && $kirim->aktif()) {
             if (! $pegawai->no_hp) {
                 $galat[] = 'WhatsApp: nomor HP pegawai kosong';
             } elseif (! $log->wa_template) {
-                $galat[] = 'WhatsApp: template pesan belum diisi nama template WhatsApp-nya';
+                $galat[] = 'WhatsApp (KirimDev): template pesan belum diisi nama template WhatsApp-nya';
             } else {
                 $hasil = $kirim->kirimTemplate(
                     $pegawai->no_hp,
@@ -79,21 +82,30 @@ class KirimPengingatJob implements ShouldQueue
                 );
 
                 if ($hasil['ok']) {
-                    $log->update([
-                        'status' => 'terkirim',
-                        'kanal' => 'wa',
-                        'tujuan' => '+' . KirimDevService::normalisasiNomor($pegawai->no_hp),
-                        'respon' => $hasil['respon'],
-                        'terkirim_at' => now(),
-                    ]);
+                    $this->tandaiWaTerkirim($log, $pegawai->no_hp, $hasil['respon']);
 
                     return;
                 }
 
-                $galat[] = 'WhatsApp: ' . $hasil['pesan'];
+                $galat[] = 'WhatsApp (KirimDev): ' . $hasil['pesan'];
+            }
+        } elseif ($provider === 'fonnte' && $fonnte->aktif()) {
+            if (! $pegawai->no_hp) {
+                $galat[] = 'WhatsApp: nomor HP pegawai kosong';
+            } else {
+                // Fonnte mengirim teks bebas: pakai isi pesan template yang sudah terisi variabelnya
+                $hasil = $fonnte->kirim($pegawai->no_hp, $log->pesan);
+
+                if ($hasil['ok']) {
+                    $this->tandaiWaTerkirim($log, $pegawai->no_hp, $hasil['respon']);
+
+                    return;
+                }
+
+                $galat[] = 'WhatsApp (Fonnte): ' . $hasil['pesan'];
             }
         } else {
-            $galat[] = 'WhatsApp: integrasi nonaktif';
+            $galat[] = 'WhatsApp: integrasi nonaktif atau belum lengkap';
         }
 
         // 2) Email (cadangan)
@@ -123,6 +135,17 @@ class KirimPengingatJob implements ShouldQueue
         }
 
         $log->update(['status' => 'gagal', 'error' => implode(' | ', $galat)]);
+    }
+
+    private function tandaiWaTerkirim(RiwayatPengingat $log, string $noHp, ?string $respon): void
+    {
+        $log->update([
+            'status' => 'terkirim',
+            'kanal' => 'wa',
+            'tujuan' => '+' . KirimDevService::normalisasiNomor($noHp),
+            'respon' => $respon,
+            'terkirim_at' => now(),
+        ]);
     }
 
     public function failed(Throwable $e): void

@@ -49,8 +49,8 @@
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
                 <h1 class="text-2xl font-bold text-slate-800">Template Pesan</h1>
-                <p class="mt-1 text-sm text-slate-400">Isi pesan dipakai untuk email cadangan. WhatsApp memakai template yang
-                    disetujui di KirimDev, dan aplikasi mengisi variabelnya.</p>
+                <p class="mt-1 text-sm text-slate-400">Isi pesan dipakai untuk Fonnte dan email. Template WhatsApp hanya
+                    diperlukan jika memakai KirimDev.</p>
             </div>
             <button @click="openCreate()"
                 class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">+ Tambah
@@ -98,8 +98,13 @@
                                     = {{ $p['nilai'] }}</span>
                             @endforeach
                         @else
-                            <span class="text-amber-700">Belum ada template WhatsApp, pengingat hanya bisa lewat
-                                email.</span>
+                            @if (\App\Models\Setting::waProvider() === 'kirimdev')
+                                <span class="text-amber-700">Belum ada template WhatsApp, pengingat hanya bisa lewat
+                                    email.</span>
+                            @else
+                                <span class="text-slate-500">Tanpa template WhatsApp KirimDev (tidak diperlukan untuk Fonnte
+                                    atau email).</span>
+                            @endif
                         @endif
                     </div>
 
@@ -156,7 +161,7 @@
                     <div class="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4">
                         <p class="text-sm font-semibold text-slate-700">Template WhatsApp (KirimDev)</p>
                         <p class="mt-1 text-xs text-slate-500">Isi sesuai template yang sudah <b>disetujui</b> di dashboard
-                            KirimDev.</p>
+                            KirimDev. Kosongkan jika memakai Fonnte.</p>
 
                         <div class="mt-3 grid gap-4 sm:grid-cols-3">
                             <div class="sm:col-span-2">

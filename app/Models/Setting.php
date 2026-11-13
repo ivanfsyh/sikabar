@@ -11,7 +11,22 @@ class Setting extends Model
     protected $fillable = ['key', 'value'];
 
     /** Kunci yang disimpan terenkripsi (jangan ganti APP_KEY setelah diisi). */
-    public const RAHASIA = ['kirim_api_key', 'smtp_password'];
+    public const RAHASIA = ['kirim_api_key', 'smtp_password', 'fonnte_token'];
+
+    /**
+     * Provider WhatsApp yang dipilih: kirimdev | fonnte | none.
+     * Jika belum pernah dipilih, ikuti pengaturan lama (kirim_aktif) agar data lama tidak hilang.
+     */
+    public static function waProvider(): string
+    {
+        $p = static::get('wa_provider');
+
+        if (in_array($p, ['kirimdev', 'fonnte', 'none'], true)) {
+            return $p;
+        }
+
+        return static::bool('kirim_aktif') ? 'kirimdev' : 'none';
+    }
 
     public static function semua(): array
     {

@@ -25,25 +25,37 @@
 
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-800">Integrasi & Jadwal</h1>
-        <p class="mt-1 text-sm text-slate-400">WhatsApp (KirimDev) sebagai kanal utama, email sebagai cadangan jika WhatsApp
-            gagal.</p>
+        <p class="mt-1 text-sm text-slate-400">Pilih satu kanal WhatsApp (KirimDev atau Fonnte). Email bisa dipakai sebagai
+            cadangan jika WhatsApp gagal.</p>
     </div>
 
-    <form method="POST" action="{{ route('pengaturan.integrasi.simpan') }}" class="space-y-6">
+    <form method="POST" action="{{ route('pengaturan.integrasi.simpan') }}" class="space-y-6" x-data="{ provider: '{{ old('wa_provider', Setting::waProvider()) }}' }">
         @csrf
         @method('PUT')
 
-        {{-- KIRIMDEV --}}
+        {{-- PILIH KANAL WHATSAPP --}}
         <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <h3 class="font-semibold text-slate-800">WhatsApp (KirimDev)</h3>
-                <label class="flex items-center gap-2 text-sm text-slate-600">
-                    <input type="hidden" name="kirim_aktif" value="0">
-                    <input type="checkbox" name="kirim_aktif" value="1" @checked(old('kirim_aktif', Setting::bool('kirim_aktif')))
-                        class="rounded border-slate-300 text-blue-600">
-                    Aktif
-                </label>
+            <h3 class="font-semibold text-slate-800">Kanal WhatsApp</h3>
+            <p class="mt-1 text-xs text-slate-400">Hanya satu yang aktif pada satu waktu.</p>
+
+            <div class="mt-4 grid gap-3 md:grid-cols-3">
+                @foreach (['kirimdev' => ['KirimDev', 'Template WhatsApp Business yang sudah disetujui'], 'fonnte' => ['Fonnte', 'Pesan teks bebas lewat nomor WhatsApp'], 'none' => ['Nonaktif', 'Tidak memakai WhatsApp (hanya email)']] as $val => [$judul, $ket])
+                    <label class="flex cursor-pointer gap-3 rounded-xl border p-4"
+                        :class="provider === '{{ $val }}' ? 'border-blue-500 bg-blue-50/50' : 'border-slate-200'">
+                        <input type="radio" name="wa_provider" value="{{ $val }}" x-model="provider"
+                            class="mt-1 text-blue-600">
+                        <span>
+                            <span class="block text-sm font-semibold text-slate-700">{{ $judul }}</span>
+                            <span class="block text-xs text-slate-400">{{ $ket }}</span>
+                        </span>
+                    </label>
+                @endforeach
             </div>
+        </div>
+
+        {{-- KIRIMDEV --}}
+        <div x-show="provider === 'kirimdev'" class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+            <h3 class="font-semibold text-slate-800">WhatsApp (KirimDev)</h3>
             <p class="mt-1 text-xs text-slate-400">
                 Pesan proaktif wajib memakai template WhatsApp yang sudah disetujui. Buat dan ajukan template di dashboard
                 KirimDev,
@@ -73,6 +85,25 @@
             </div>
         </div>
 
+        {{-- FONNTE --}}
+        <div x-show="provider === 'fonnte'" class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+            <h3 class="font-semibold text-slate-800">WhatsApp (Fonnte)</h3>
+            <p class="mt-1 text-xs text-slate-400">
+                Fonnte mengirim teks bebas dari kolom <b>Isi pesan</b> di menu <b>Template Pesan</b>. Pastikan device
+                (nomor WhatsApp) sudah terhubung di dashboard Fonnte.
+            </p>
+
+            <div class="mt-5">
+                <label class="{{ $label }}">Token Device</label>
+                <input type="password" name="fonnte_token" autocomplete="new-password"
+                    placeholder="{{ $adaFonnteToken ? '•••••••• (tersimpan, kosongkan jika tidak diubah)' : 'Token dari dashboard Fonnte' }}"
+                    class="{{ $input }}">
+                <p class="mt-1 text-xs text-slate-400">Ada di dashboard Fonnte, menu Device → token pada device yang
+                    dipakai.
+                </p>
+            </div>
+        </div>
+
         {{-- EMAIL --}}
         <div class="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
             <div class="flex items-center justify-between">
@@ -84,7 +115,8 @@
                     Aktif
                 </label>
             </div>
-            <p class="mt-1 text-xs text-slate-400">Dikirim hanya jika WhatsApp gagal atau nomor HP pegawai kosong.</p>
+            <p class="mt-1 text-xs text-slate-400">Dikirim jika WhatsApp gagal/tidak terhubung, WhatsApp nonaktif, atau
+                nomor HP pegawai kosong.</p>
 
             <div class="mt-5 grid gap-5 md:grid-cols-2">
                 <div>
@@ -204,6 +236,28 @@
                 <label class="{{ $label }}">Kirim email uji ke alamat</label>
                 <div class="mt-1.5 flex gap-2">
                     <input type="email" name="email" placeholder="nama@email.com"
+                        class="w-full rounded-xl border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
+                    <button
+                        class="rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700">Kirim</button>
+                </div>
+            </form>
+        </div>
+
+        {{-- UJI FONNTE --}}
+        <div class="mt-6 grid gap-6 border-t border-slate-100 pt-6 lg:grid-cols-3">
+            <form method="POST" action="{{ route('pengaturan.fonnte.tes') }}" class="flex flex-col justify-end">
+                @csrf
+                <p class="mb-2 text-sm text-slate-600">Fonnte: cek token dan status device</p>
+                <button
+                    class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50">Cek
+                    Koneksi Fonnte</button>
+            </form>
+
+            <form method="POST" action="{{ route('pengaturan.fonnte.uji') }}">
+                @csrf
+                <label class="{{ $label }}">Kirim WhatsApp uji (Fonnte)</label>
+                <div class="mt-1.5 flex gap-2">
+                    <input name="nomor_fonnte" placeholder="08123456789"
                         class="w-full rounded-xl border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                     <button
                         class="rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700">Kirim</button>

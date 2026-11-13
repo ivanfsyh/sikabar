@@ -69,6 +69,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('pengaturan/integrasi', [PengaturanController::class, 'simpan'])->name('pengaturan.integrasi.simpan');
         Route::post('pengaturan/kirim/tes', [PengaturanController::class, 'tesKoneksi'])->name('pengaturan.kirim.tes');
         Route::post('pengaturan/kirim/uji', [PengaturanController::class, 'ujiKirim'])->name('pengaturan.kirim.uji');
+        Route::post('pengaturan/fonnte/tes', [PengaturanController::class, 'tesFonnte'])->name('pengaturan.fonnte.tes');
+        Route::post('pengaturan/fonnte/uji', [PengaturanController::class, 'ujiFonnte'])->name('pengaturan.fonnte.uji');
         Route::post('pengaturan/email/uji', [PengaturanController::class, 'ujiEmail'])->name('pengaturan.email.uji');
     });
 
