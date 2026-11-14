@@ -153,9 +153,9 @@
                         Monitoring
                     </p>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3
-                          text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700">
+                    <a href="{{ route('pimpinan.laporan') }}"
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm
+      {{ request()->routeIs('pimpinan.laporan*') ? 'bg-blue-50 font-semibold text-blue-700' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-700' }}">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                 d="M3 3v18h18M7 14l4-4 4 4 6-7" />

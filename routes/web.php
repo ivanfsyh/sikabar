@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\AturanPengingatController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanKgbController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PegawaiImportController;
-use App\Http\Controllers\RiwayatKgbController;
-use App\Http\Controllers\AturanPengingatController;
 use App\Http\Controllers\PengaturanController;
+use App\Http\Controllers\RiwayatKgbController;
 use App\Http\Controllers\RiwayatPengingatController;
 use App\Http\Controllers\TemplatePesanController;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:pimpinan'])->group(function () {
 
         Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('pimpinan.dashboard');
+
+        // Laporan KGB
+        Route::get('/pimpinan/laporan-kgb', [LaporanKgbController::class, 'index'])->name('pimpinan.laporan');
+        Route::get('/pimpinan/laporan-kgb/cetak', [LaporanKgbController::class, 'cetak'])->name('pimpinan.laporan.cetak');
+        Route::get('/pimpinan/laporan-kgb/ekspor', [LaporanKgbController::class, 'ekspor'])->name('pimpinan.laporan.ekspor');
     });
 });
 

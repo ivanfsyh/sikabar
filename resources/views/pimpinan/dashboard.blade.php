@@ -30,6 +30,13 @@
 
     </div>
 
+    <div class="mt-8 flex justify-end">
+        <a href="{{ route('pimpinan.laporan') }}"
+            class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+            Lihat Laporan KGB Lengkap &rarr;
+        </a>
+    </div>
+
     @include('partials.jadwal-kgb', ['detail' => false])
 
 @endsection
